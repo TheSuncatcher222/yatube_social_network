@@ -6,40 +6,30 @@ from posts.models import Comment
 from posts.models import Group
 from posts.models import Post
 
-text_dict: dict[str, str] = {
-    'user_username': 'Тестовый автор',
-    'follower_username': 'Подписчик',
-    'group_description': 'Тестовое описание группы',
-    'group_slug': 'test_slug',
-    'group_title': 'Тестовое наименование группы',
-    'post_text': 'Тестовый текст тестового поста, который более 5 слов',
-    # 'comment_text': 'Классный тестовый текст! И комментарий!!',
-}
-
 
 class PostModelTest(TestCase):
     """Тест моделей Group и Post приложения 'posts'"""
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.USER = User.objects.create(username=text_dict['user_username'])
+        cls.USER = User.objects.create(username='Тестовый автор')
         cls.FOLLOWER = User.objects.create(
-            username=text_dict['follower_username']
+            username='Подписчик'
         )
         cls.group = Group.objects.create(
-            description=text_dict['group_description'],
-            slug=text_dict['group_slug'],
-            title=text_dict['group_title'],
+            description='Тестовое описание группы',
+            slug='test_slug',
+            title='Тестовое наименование группы',
         )
         cls.post = Post.objects.create(
             author=cls.USER,
             group=cls.group,
-            text=text_dict['post_text'],
+            text='Тестовый текст тестового поста, который более 5 слов',
         )
         cls.comment = Comment.objects.create(
             author=cls.USER,
             post=cls.post,
-            text=text_dict['comment_text'],
+            text='Классный тестовый текст! И комментарий!!',
         )
         cls.follow = Follow.objects.create(
             author=cls.USER,
@@ -52,15 +42,15 @@ class PostModelTest(TestCase):
         )
 
     def test_models_have_correct_object_names(self) -> None:
-        """Проверка, что у моделей корректно работает __str__"""
+        """Проверка, что моделей корректно работает __str__"""
         STR_COMMENT = (
             f'Автор: Тестовый автор{PostModelTest.NEW_LINE}'
             + 'Текст: Классный тестовый текст! И комментарий!!'
         )
         test_dict = {
             str(PostModelTest.comment): STR_COMMENT,
-            str(PostModelTest.follow): text_dict['user_username'],
-            str(PostModelTest.group): text_dict['group_title'],
+            str(PostModelTest.follow): 'Тестовый автор',
+            str(PostModelTest.group): 'Тестовое наименование группы',
             str(PostModelTest.post): PostModelTest.STR_POST,
         }
         for task, expected_value in test_dict.items():
@@ -73,11 +63,11 @@ class PostModelTest(TestCase):
         pass
 
     def test_models_fields(self) -> None:
-        """Проверка полей у моделей"""
+        """Проверка полей моделей"""
         test_dict = {
-            str(PostModelTest.comment.author): text_dict['user_username'],
+            str(PostModelTest.comment.author): 'Тестовый автор',
             str(PostModelTest.comment.post): PostModelTest.STR_POST,
-            # PostModelTest.comment.text: text_dict['comment_text'],
+            PostModelTest.comment.text: 'Классный тестовый текст! И комментарий!!',
             PostModelTest.comment._meta.get_field('author').verbose_name: (
                 'Автор комментария'
             ),
@@ -93,8 +83,8 @@ class PostModelTest(TestCase):
             PostModelTest.comment._meta.default_related_name: 'comments',
             PostModelTest.comment._meta.verbose_name: 'комментарий',
             PostModelTest.comment._meta.verbose_name_plural: 'Комментарии',
-            str(PostModelTest.follow.author): text_dict['user_username'],
-            str(PostModelTest.follow.user): text_dict['follower_username'],
+            str(PostModelTest.follow.author): 'Тестовый автор',
+            str(PostModelTest.follow.user): 'Подписчик',
             PostModelTest.follow._meta.get_field('author').verbose_name: (
                 'автор'
             ),
@@ -103,9 +93,9 @@ class PostModelTest(TestCase):
             ),
             PostModelTest.follow._meta.verbose_name: 'подписку',
             PostModelTest.follow._meta.verbose_name_plural: 'Подписки',
-            PostModelTest.group.description: text_dict['group_description'],
-            PostModelTest.group.slug: text_dict['group_slug'],
-            PostModelTest.group.title: text_dict['group_title'],
+            PostModelTest.group.description: 'Тестовое описание группы',
+            PostModelTest.group.slug: 'test_slug',
+            PostModelTest.group.title: 'Тестовое наименование группы',
             PostModelTest.group._meta.get_field('description').verbose_name: (
                 'Описание группы'
             ),
@@ -117,9 +107,9 @@ class PostModelTest(TestCase):
             ),
             PostModelTest.group._meta.verbose_name: 'группу',
             PostModelTest.group._meta.verbose_name_plural: 'группы',
-            str(PostModelTest.post.author): text_dict['user_username'],
-            str(PostModelTest.post.group): text_dict['group_title'],
-            PostModelTest.post.text: text_dict['post_text'],
+            str(PostModelTest.post.author): 'Тестовый автор',
+            str(PostModelTest.post.group): 'Тестовое наименование группы',
+            PostModelTest.post.text: 'Тестовый текст тестового поста, который более 5 слов',
             PostModelTest.post._meta.get_field('author').verbose_name: (
                 'Автор поста'
             ),
