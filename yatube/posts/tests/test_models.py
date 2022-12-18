@@ -67,7 +67,9 @@ class PostModelTest(TestCase):
         test_dict = {
             str(PostModelTest.comment.author): 'Тестовый автор',
             str(PostModelTest.comment.post): PostModelTest.STR_POST,
-            PostModelTest.comment.text: 'Классный тестовый текст! И комментарий!!',
+            PostModelTest.comment.text: (
+                'Классный тестовый текст! И комментарий!!'
+            ),
             PostModelTest.comment._meta.get_field('author').verbose_name: (
                 'Автор комментария'
             ),
@@ -109,7 +111,9 @@ class PostModelTest(TestCase):
             PostModelTest.group._meta.verbose_name_plural: 'группы',
             str(PostModelTest.post.author): 'Тестовый автор',
             str(PostModelTest.post.group): 'Тестовое наименование группы',
-            PostModelTest.post.text: 'Тестовый текст тестового поста, который более 5 слов',
+            PostModelTest.post.text: (
+                'Тестовый текст тестового поста, который более 5 слов'
+            ),
             PostModelTest.post._meta.get_field('author').verbose_name: (
                 'Автор поста'
             ),
