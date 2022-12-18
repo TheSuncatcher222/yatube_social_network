@@ -1,0 +1,27 @@
+{% extends 'about/about.html' %}
+{% load static %}
+{% block head_title %}
+  Yatube | Технологии
+{% endblock %}
+{% block card_header %}
+  Технологии
+{% endblock %}
+{% block card_body %}
+  <p>
+    Сайт создан при помощи:
+    <ul>
+      <li>
+        Python 3.11.0
+      </li>
+      <li>
+        Django 2.2.19
+      </li>
+      <li>
+        Bootstrap 5.2.3
+      </li>
+    </ul>
+    <hr>
+    <img src="{% static 'img/static_pages/pythonXdjango.png' %}"
+      class="img-fluid" alt="Responsive image">
+  </p>
+{% endblock %}

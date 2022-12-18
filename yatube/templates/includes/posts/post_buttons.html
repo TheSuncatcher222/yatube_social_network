@@ -1,0 +1,40 @@
+<div class="container">
+  {% with request.resolver_match.view_name as view_name %}
+    <div class="row">
+      <div class="d-flex justify-content-between bd-highlight mb-20">
+        <div class="p-2 bd-highlight">
+          {% if view_name != 'posts:post_detail' %}
+            <a class="btn btn-primary btn-sm" href="{% url 'posts:post_detail' post.id %}">
+              подробно
+            </a>
+          {% endif %}
+          &nbsp
+          {% if view_name != 'posts:group_list' %}
+           {% if post.group %}
+             <a class="btn btn-primary btn-sm" href="{% url 'posts:group_list' post.group.slug %}">
+               записи группы
+             </a>
+             &nbsp
+           {% endif %}
+          {% endif %}
+          {% if view_name != 'posts:profile' %}
+            <a class="btn btn-primary btn-sm" href="{% url 'posts:profile' post.author %}">
+              записи автора
+            </a>
+          {% endif %}
+        </div>
+        <div class="p-2 bd-highlight">
+          {% if post.author.username == user.username %}
+            <a class="btn btn-warning btn-sm" href="{% url 'posts:post_edit' post.id %}">
+              редактировать
+            </a>
+            &nbsp
+            <a class="btn btn-danger btn-sm" href="{% url 'posts:post_delete' post.id %}">
+              удалить
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  {% endwith %}
+</div>

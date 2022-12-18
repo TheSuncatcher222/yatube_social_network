@@ -1,0 +1,15 @@
+{% extends "users/user_auth.html" %}
+{% block head_title %}
+  Yatube | Зарегистрироваться
+{% endblock %}
+{% block header_h %}
+  Зарегистрироваться
+{% endblock %}
+{% block post_action %}
+  <form method="post" action="{% url 'users:signup' %}">
+{% endblock %}
+{% block bottom_buttons %}
+  <button type="submit" class="btn btn-primary">
+    Зарегистрироваться
+  </button>
+{% endblock %}

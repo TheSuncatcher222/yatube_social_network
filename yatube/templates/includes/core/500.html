@@ -1,0 +1,17 @@
+{% extends 'core/http_error.html' %}
+{% block head_title %}
+  Yatube | 500
+{% endblock %}
+{% block code %}
+  500
+{% endblock %}
+{% block what %}
+  О нет! Неопознанная ошибка!
+{% endblock %}
+{% block why_it_happens %}
+  В целом, причин может быть бесконечное количество.
+{% endblock %}
+{% block what_to_do %}
+  Перейдите на нашу <a href="{% url 'posts:index' %}">главную страницу</a>, 
+  с которой точно все в порядке.
+{% endblock %}

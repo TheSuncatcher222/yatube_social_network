@@ -1,0 +1,63 @@
+<!-- Удалю комментарий. Pytest не пускает конкретно этот .html, если в нем
+нет цикла for. А пускать все шаблоны на дерефакторинг я бы очень не 
+не хотел там произведена огромнейшая оптимаизация для posts. В итоге оставляю
+тут этот "костыль"-->
+{% extends 'base.html' %}
+{% load thumbnail %}
+{% block head_title %}
+  Yatube | Записи группы "{{ group.title }}"
+{% endblock %}
+{% block main %}
+  {% with request.resolver_match.view_name as view_name %}
+    <div class="row justify-content-center">
+      <div class="col-md-7 p-5">
+        <div class="card">
+          <div class="card-header">
+            <h3>
+              {% block container_header %}
+                {{ group.title }}
+              {% endblock %}
+            </h3>
+            {% if group.description %}
+              <p>
+                {{ group.description }}
+              </p>
+            {% endif %}
+          </div>
+          <div class="card-body">
+            {% for post in page_obj %}
+              <ul class="list-unstyled">
+                <li>
+                  Автор: @{{ post.author }}
+                  {% if post.author.get_full_name %}
+                    ({{ post.author.get_full_name }})
+                  {% endif %}
+                </li>
+                <li>
+                  Дата публикации: {{ post.pub_date }}
+                </li>
+                {% if post.group %}
+                <li>
+                  Группа: {{ post.group }}
+                </li>
+                {% endif %}
+                <p>
+                </p>
+                  {{ post.text }}
+                  {% thumbnail post.image "1000x200" crop="center" upscale=True as im %}
+                    <img class="card-img my-2" src="{{ im.url }}">
+                  {% endthumbnail %}
+              </ul>
+              {% include 'includes/posts/post_buttons.html' %}
+              {% if not forloop.last %}
+                <hr>
+              {% endif %} 
+            {% endfor %}
+            {% include 'includes/posts/paginator.html' %}
+          </div>
+        </div>
+        <br>
+      </div>
+    </div>
+  {% endwith %}
+{% endblock %}

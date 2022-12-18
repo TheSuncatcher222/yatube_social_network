@@ -1,0 +1,14 @@
+{% extends 'posts/posts_show_page.html' %}
+{% load thumbnail %}
+{% block head_title %}
+  Yatube | Детали поста
+{% endblock %}
+{% block container_header %}
+  Автор: @{{post.author}}
+  {% if post.author.get_full_name %}
+    ({{ post.author.get_full_name }})
+  {% endif %}
+{% endblock %}
+{% block author_posts_count %}
+  Всего постов автора: {{ posts_count }}
+{% endblock %}

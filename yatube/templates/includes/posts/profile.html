@@ -1,0 +1,10 @@
+{% extends 'posts/posts_show_page.html' %}
+{% block head_title %}
+  Yatube | Все посты пользователя @{{ author.username }}
+{% endblock %}
+{% block container_header %}
+  Все посты ({{ author.posts.count }}) пользователя @{{ author.username }}
+{% endblock %}
+{% block follow_author %}
+  {% include 'includes/posts/post_follow_buttons.html'%}
+{% endblock %}

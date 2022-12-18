@@ -1,0 +1,26 @@
+{% extends 'about/about.html' %}
+{% load static %}
+{% block head_title %}
+  Yatube | Об авторе
+{% endblock %}
+{% block card_header %}
+  Об авторе
+{% endblock %}
+{% block card_body %}
+  <p>
+    Привет!
+  </p>
+  <p>
+    Я автор этого сайта. Меня зовут Кирилл. Я являюсь учеником кагорты №52
+    набора Яндекс.Практикума 2022 года.
+  </p>
+  <p>
+    Мой текущий девиз: "Я не волшебник, я только учусь".
+  </p>
+  <p>
+    Мой главный лайфхак: "Метод утенка действительно работает!".
+    <hr>
+    <img src="{% static 'img/static_pages/ducks.png' %}"
+      class="img-fluid" alt="Responsive image">
+  </p>
+{% endblock %}

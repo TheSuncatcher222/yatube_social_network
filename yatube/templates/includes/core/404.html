@@ -1,0 +1,17 @@
+{% extends 'core/http_error.html' %}
+{% block head_title %}
+  Yatube | 404
+{% endblock %}
+{% block code %}
+  404
+{% endblock %}
+{% block what %}
+  О нет! Страница "{{ path }}" не найдена!
+{% endblock %}
+{% block why_it_happens %}
+  Вероятно, это произошло из-за опечатки в адресе.
+{% endblock %}
+{% block what_to_do %}
+  Перейдите на нашу <a href="{% url 'posts:index' %}">главную страницу</a>, 
+  которая точно существует.
+{% endblock %}

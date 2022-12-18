@@ -1,0 +1,16 @@
+{% extends 'core/http_error.html' %}
+{% block head_title %}
+  Yatube | 403
+{% endblock %}
+{% block code %}
+  403
+{% endblock %}
+{% block what %}
+  О нет, доступ отклонен!
+{% endblock %}
+{% block why_it_happens %}
+  Вероятно, вы попытались изменить чужой пост или написать пост, не имея авторизации.
+{% endblock %}
+{% block what_to_do %}
+  Быть <a href="{% url 'users:login %}">авторизированным</a> на сайте и не пытаться изменять чужие посты!
+{% endblock %}

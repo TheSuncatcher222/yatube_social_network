@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block head_title %}
+{% endblock %}
+{% block main %}
+  <div class="container" >
+    <div class="row align-items-center">
+      <div class="col-sm">
+        <blockquote class="blockquote text-center">
+          <h1>
+            <span style="color:red">
+              {% block code %}
+              {% endblock %}
+            </span>
+          </h1>
+          <p>
+            {% block what %}
+            {% endblock %}
+          </p>
+        </blockquote>
+      </div>
+      <div class="col-sm">
+        <br>
+        <p>
+          <b>
+            Почему такое могло произойти?
+          </b>
+        </p>
+        <p>
+          {% block why_it_happens %}
+          {% endblock %}
+        </p>
+        <hr>
+        <p>
+          <b>
+            Что делать дальше?
+          </b>
+        </p>
+        <p>
+          {% block what_to_do %}
+          {% endblock %}
+        </p>
+      </div>
+    </div>
+  </div>
+{% endblock %} 

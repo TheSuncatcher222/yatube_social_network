@@ -1,0 +1,11 @@
+{% if following_allow %}
+  {% if following %}
+    <a class="btn btn-danger btn-sm" href="{% url 'posts:profile_unfollow' author.username %}">
+      Отписаться
+    </a>
+  {% else %}
+    <a class="btn btn-primary btn-sm" href="{% url 'posts:profile_follow' author.username %}">
+      Подписаться
+    </a>
+  {% endif %}
+{% endif %}

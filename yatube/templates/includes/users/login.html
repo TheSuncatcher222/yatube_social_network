@@ -1,0 +1,23 @@
+{% extends "users/user_auth.html" %}
+{% block head_title %}
+  Yatube | Войти
+{% endblock %}
+{% block header_h %}
+  Войти на сайт
+{% endblock %}
+{% block post_action %}
+  <form method="post" 
+    {% if action_url %} 
+      action="{% url action_url %}"
+    {% endif %}
+  >
+{% endblock %}
+{% block bottom_buttons %}
+  <button type="submit" class="btn btn-primary">
+    Войти
+  </button>
+  <a class="btn btn-primary" href="{% url 'users:password_reset_form' %}"
+    role="button">
+    Забыли пароль?
+  </a>
+{% endblock %}

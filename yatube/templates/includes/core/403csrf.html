@@ -1,0 +1,17 @@
+{% extends 'core/http_error.html' %}
+{% block head_title %}
+  Yatube | 403
+{% endblock %}
+{% block code %}
+  403
+{% endblock %}
+{% block what %}
+  Ошибка проверки CSRF-токена!
+{% endblock %}
+{% block why_it_happens %}
+  Вероятно, при отправке формы не был отправлен или отправлен невалидный csrf-токен.
+{% endblock %}
+{% block what_to_do %}
+  Обновите страницу и заполните форму заново. При повторном возникновении ошибки
+  <a href="404">напишите нам</a>, и мы все обязательно поправим!
+{% endblock %}
