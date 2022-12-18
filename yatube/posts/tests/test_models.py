@@ -13,7 +13,7 @@ text_dict: dict[str, str] = {
     'group_slug': 'test_slug',
     'group_title': 'Тестовое наименование группы',
     'post_text': 'Тестовый текст тестового поста, который более 5 слов',
-    'comment_text': 'Классный тестовый текст! И комментарий!!',
+    #'comment_text': 'Классный тестовый текст! И комментарий!!',
 }
 
 
@@ -77,7 +77,7 @@ class PostModelTest(TestCase):
         test_dict = {
             str(PostModelTest.comment.author): text_dict['user_username'],
             str(PostModelTest.comment.post): PostModelTest.STR_POST,
-            PostModelTest.comment.text: text_dict['comment_text'],
+            #PostModelTest.comment.text: text_dict['comment_text'],
             PostModelTest.comment._meta.get_field('author').verbose_name: (
                 'Автор комментария'
             ),
