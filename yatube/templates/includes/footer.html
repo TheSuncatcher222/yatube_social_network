@@ -1,5 +1,12 @@
-<div class="footer-copyright text-center py-3">© {{ year }} Copyright
-  <p>
+<div class="footer-copyright text-center py-3">
+    <a class="link" href="{% url 'about:author' %}">
+      Об авторе</a>
+      ·
+    <a class="link" href="{% url 'about:tech' %}">
+      Технологии
+    </a>
+  <br>
+  © {{ year }} Copyright
+  <br>
     <span style="color:red">Ya</span>tube
-  </p>
 </div>
