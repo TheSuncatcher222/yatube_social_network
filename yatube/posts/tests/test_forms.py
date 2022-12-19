@@ -27,6 +27,8 @@ class PostFormTest(TestCase):
         cls.GUEST_CLIENT = Client()
         cls.AUTHORIZED_CLIENT_1 = Client()
         cls.AUTHORIZED_CLIENT_1.force_login(cls.USER_1)
+        cls.AUTHORIZED_CLIENT_2 = Client()
+        cls.AUTHORIZED_CLIENT_2.force_login(cls.USER_2)
         cls.GROUP_1 = Group.objects.create(
             description='Тестовое описание группы_1',
             slug='test_slug_1',
@@ -69,7 +71,7 @@ class PostFormTest(TestCase):
             'group': PostFormTest.GROUP_1.id,
             'image': uploaded,
         }
-        response = self.AUTHORIZED_CLIENT_1.post(
+        response = PostFormTest.AUTHORIZED_CLIENT_1.post(
             reverse('posts:post_create'),
             data=new_post_data,
             follow=True,
@@ -105,7 +107,7 @@ class PostFormTest(TestCase):
             self.assertEqual(new_post_text, new_post_data['text'])
             new_post_image = response.context['page_obj'][0].image
             self.assertTrue(new_post_image)
-        response = self.GUEST_CLIENT.post(
+        response = PostFormTest.GUEST_CLIENT.post(
             reverse('posts:post_create'),
             data=new_post_data,
         )
@@ -117,7 +119,7 @@ class PostFormTest(TestCase):
         edit_post_data = {
             'text': 'Какой-то НОВЫЙ текст, да'
         }
-        response = self.GUEST_CLIENT.post(
+        response = PostFormTest.GUEST_CLIENT.post(
             reverse(
                 'posts:post_edit',
                 kwargs={'post_id': PostFormTest.posts_last_id}
@@ -146,7 +148,16 @@ class PostFormTest(TestCase):
     def test_create_comment(self):
         comments_init_count = Comment.objects.count()
         new_comment_data = {'text': 'Какой классный пост! И комментарий!'}
-        response = self.AUTHORIZED_CLIENT_1.post(
+        response = PostFormTest.GUEST_CLIENT.post(
+            reverse(
+                'posts:add_comment',
+                kwargs={'post_id': PostFormTest.posts_last_id},
+            ),
+            data=new_comment_data,
+        )
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        self.assertEqual(Comment.objects.count(), comments_init_count)
+        response = PostFormTest.AUTHORIZED_CLIENT_1.post(
             reverse(
                 'posts:add_comment',
                 kwargs={'post_id': PostFormTest.posts_last_id},
@@ -157,7 +168,7 @@ class PostFormTest(TestCase):
         new_comment_id = Comment.objects.last().id
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(Comment.objects.count(), comments_init_count + 1)
-        response = self.AUTHORIZED_CLIENT_1.get(
+        response = PostFormTest.AUTHORIZED_CLIENT_1.get(
             reverse(
                 'posts:post_detail',
                 kwargs={'post_id': PostFormTest.posts_last_id},
@@ -169,7 +180,13 @@ class PostFormTest(TestCase):
         )
 
     def test_subscriptions(self):
-        response = PostFormTest.AUTHORIZED_CLIENT_1.get('/follow/')
+        response = PostFormTest.GUEST_CLIENT.get(
+            reverse('posts:follow_index')
+        )
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        response = PostFormTest.AUTHORIZED_CLIENT_1.get(
+            reverse('posts:follow_index')
+        )
         self.assertEqual(response.status_code, HTTPStatus.OK)
         PostFormTest.AUTHORIZED_CLIENT_1.get(
             f'/profile/{PostFormTest.USER_1}/follow/'
@@ -179,7 +196,9 @@ class PostFormTest(TestCase):
             f'/profile/{PostFormTest.USER_2}/follow/'
         )
         self.assertEqual(Follow.objects.count(), 1)
-        response = PostFormTest.AUTHORIZED_CLIENT_1.get('/follow/')
+        response = PostFormTest.AUTHORIZED_CLIENT_1.get(
+            reverse('posts:follow_index')
+        )
         len_context = len(response.context['page_obj'])
         self.assertEqual(len_context, 1)
         self.assertEqual(
@@ -190,5 +209,31 @@ class PostFormTest(TestCase):
             f'/profile/{PostFormTest.USER_2}/unfollow/'
         )
         self.assertEqual(Follow.objects.count(), 0)
-        response = PostFormTest.AUTHORIZED_CLIENT_1.get('/follow/')
+        response = PostFormTest.AUTHORIZED_CLIENT_1.get(
+            reverse('posts:follow_index')
+        )
         self.assertEqual(response.status_code, HTTPStatus.OK)
+
+    def test_delete_post(self):
+        new_post_data = {'text': 'Пост для тестирования удаления'}
+        PostFormTest.AUTHORIZED_CLIENT_1.post(
+            reverse('posts:post_create'),
+            data = new_post_data,
+        )
+        post_new_count = Post.objects.count()
+        post_new_id = Post.objects.last().id
+        self.assertEqual(post_new_count, PostFormTest.post_first_count + 1)
+        test_dict = {
+            PostFormTest.GUEST_CLIENT: post_new_count,
+            PostFormTest.AUTHORIZED_CLIENT_2: post_new_count,
+            PostFormTest.AUTHORIZED_CLIENT_1: PostFormTest.post_first_count,
+        }
+        for client, posts_count in test_dict.items():
+            with self.subTest(field=client):
+                client.get(
+                    reverse(
+                        'posts:post_delete',
+                        kwargs={'post_id': post_new_id}
+                    ),
+                )
+                self.assertEqual(Post.objects.count(), posts_count)

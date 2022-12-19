@@ -28,11 +28,19 @@
           @{{ comment.author }} ({{ comment.author.get_full_name }})
         </a>
         <br>
-        <span style="font-size: 1.3ex; color:gray;" >
+        <span style="font-size: 1.3ex; color:gray;">
           {{ comment.pub_date }}
         </span>
         <br>
         {{ comment.text }}
+        <br>
+        {% if user.username == comment.author.username %}
+          <span style="font-size: 1.3ex;">
+            <a href="{% url 'posts:delete_comment' comment.id %}">
+              удалить
+            </a>
+          </span>
+        {% endif %}
         {% if not forloop.last %}
           <hr>
         {% endif %}

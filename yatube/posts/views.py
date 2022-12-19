@@ -6,6 +6,7 @@ from django.shortcuts import render
 from django.views.decorators.cache import cache_page
 from .forms import CommentForm
 from .forms import PostForm
+from .models import Comment
 from .models import Follow
 from .models import Group
 from .models import Post
@@ -187,3 +188,11 @@ def post_delete(request, post_id):
     if request.user == delete_post.author:
         delete_post.delete()
     return redirect('posts:index')
+
+@login_required
+def comment_delete(request, comment_id):
+    delete_comment = Comment.objects.get(id=comment_id)
+    post_id = Post.objects.get(comments=delete_comment).id
+    if request.user == delete_comment.author:
+        delete_comment.delete()
+    return redirect('posts:post_detail', post_id=post_id)

@@ -36,9 +36,14 @@
                   Дата публикации: {{ post.pub_date }}
                 </li>
                 {% if post.group %}
-                <li>
-                  Группа: {{ post.group }}
-                </li>
+                  <li>
+                    Группа: {{ post.group }}
+                  </li>
+                {% endif %}
+                {% if post.comments.count > 0 %}
+                  <li>
+                    Комментариев: {{ post.comments.count }}
+                  </li>
                 {% endif %}
                 <p>
                 </p>
