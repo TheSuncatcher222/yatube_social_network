@@ -39,12 +39,11 @@ def index(request):
 def follow_index(request):
     """Отображает главную страницу сайта только с подписками пользователя"""
     template = 'includes/posts/follow.html'
-    follow_authors = list(Follow.objects.filter(user=request.user))
     context = {
         'only_subscriptions': True,
         'page_obj': paginator_for_pages(
             Post.objects.select_related('author', 'group').filter(
-                author__username__in=follow_authors
+                author__following__user=request.user
             ),
             request.GET.get('page'),
         ),
@@ -76,8 +75,10 @@ def profile(request, username):
         user = request.user
         if user != author:
             following_allow = True
-            if Follow.objects.filter(user=user, author=author).exists():
-                following = True
+            following = Follow.objects.filter(
+                user=user,
+                author=author
+            ).exists()
     context = {
         'author': author,
         'page_obj': paginator_for_pages(
@@ -172,7 +173,17 @@ def post_edit(request, post_id):
 
 
 @login_required
+def post_delete(request, post_id):
+    """Тест удаления поста"""
+    delete_post = Post.objects.get(id=post_id)
+    if request.user == delete_post.author:
+        delete_post.delete()
+    return redirect('posts:index')
+
+
+@login_required
 def add_comment(request, post_id):
+    """Тест добавления комментария"""
     form = CommentForm(request.POST or None)
     if form.is_valid():
         comment = form.save(commit=False)
@@ -183,14 +194,8 @@ def add_comment(request, post_id):
 
 
 @login_required
-def post_delete(request, post_id):
-    delete_post = Post.objects.get(id=post_id)
-    if request.user == delete_post.author:
-        delete_post.delete()
-    return redirect('posts:index')
-
-@login_required
 def comment_delete(request, comment_id):
+    """Тест удаления комментария"""
     delete_comment = Comment.objects.get(id=comment_id)
     post_id = Post.objects.get(comments=delete_comment).id
     if request.user == delete_comment.author:
