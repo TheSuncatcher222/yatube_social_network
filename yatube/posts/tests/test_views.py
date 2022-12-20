@@ -16,6 +16,7 @@ from posts.models import Post
 ONE_MORE_PAGE_POST_COUNT: int = 1
 DIFFERENT_GROUPS_COUNT: int = 2
 
+
 class PostsViewsTests(TestCase):
     """Тестирование views приложения 'posts'"""
     @classmethod
