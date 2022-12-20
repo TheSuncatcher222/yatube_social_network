@@ -106,8 +106,10 @@ def profile_follow(request, username):
 @login_required
 def profile_unfollow(request, username):
     """Удаляет подписку на автора"""
-    author = User.objects.get(username=username).id
-    Follow.objects.get(user=request.user, author=author).delete()
+    Follow.objects.get(
+        user=request.user,
+        author__username=username
+    ).delete()
     return profile(request, username)
 
 
