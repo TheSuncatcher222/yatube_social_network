@@ -22,9 +22,9 @@
     </div>
   {% endif %}
   <div class="card-body">
-    {% for comment in post.comments.all %}
+    {% for comment in page_obj_comments %}
       <p>  
-        <a href="{% url 'posts:profile' comment.author.username %}">
+        <a href="{% url 'posts:profile' comment.post.author.username %}">
           @{{ comment.author }} ({{ comment.author.get_full_name }})
         </a>
         <br>
@@ -46,5 +46,6 @@
         {% endif %}
       </p>
     {% endfor %} 
+    {% include 'includes/posts/paginator_comments.html' %}
   </div>
 </div>
