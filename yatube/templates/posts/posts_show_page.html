@@ -48,9 +48,15 @@
                 <p>
                 </p>
                   {{ post.text }}
-                  {% thumbnail post.image "1000x200" crop="center" upscale=True as im %}
-                    <img class="card-img my-2" src="{{ im.url }}">
-                  {% endthumbnail %}
+                  {% if view_name == 'posts:post_detail' %}
+                    {% thumbnail post.image "1000x550" crop="center" upscale=True as im %}
+                      <img class="card-img my-2" src="{{ im.url }}">
+                    {% endthumbnail %}
+                  {% else %}
+                    {% thumbnail post.image "1000x1000" crop="center" upscale=True as im %}
+                      <img class="card-img my-2" src="{{ im.url }}">
+                    {% endthumbnail %}
+                  {% endif %}
               </ul>
               {% include 'includes/posts/post_buttons.html' %}
               {% if not forloop.last %}
