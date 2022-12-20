@@ -79,7 +79,7 @@ class Post(BaseModel):
     image = models.ImageField(
         'Картинка',
         blank=True,
-        help_text='Укажите группу, к которой будет относится пост',
+        help_text='Прикрепите картинку (не обязательно)',
         upload_to='posts/',
     )
     text = models.TextField(
