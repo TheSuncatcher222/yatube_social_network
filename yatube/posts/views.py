@@ -4,6 +4,8 @@ from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
 from django.views.decorators.cache import cache_page
+from core.constants import CACHE_TIME_SECONDS
+from core.constants import PAGE_POST_COUNT
 from .forms import CommentForm
 from .forms import PostForm
 from .models import Comment
@@ -12,17 +14,14 @@ from .models import Group
 from .models import Post
 from .models import User
 
-cache_time_seconds = 20
-
 
 def paginator_for_pages(objects_list, page_number):
-    page_posts_count: int = 10
-    paginator = Paginator(objects_list, page_posts_count)
+    paginator = Paginator(objects_list, PAGE_POST_COUNT)
     page_obj = paginator.get_page(page_number)
     return page_obj
 
 
-@cache_page(cache_time_seconds, key_prefix='index_page')
+@cache_page(CACHE_TIME_SECONDS, key_prefix='index_page')
 def index(request):
     """Отображает главную страницу сайта"""
     template = 'includes/posts/index.html'
