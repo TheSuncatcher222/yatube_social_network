@@ -10,5 +10,5 @@
   {% endif %}
 {% endblock %}
 {% block author_posts_count %}
-  Всего постов автора: {{ posts_count }}
+  Всего постов автора: {{ post.author.posts.count }}
 {% endblock %}
