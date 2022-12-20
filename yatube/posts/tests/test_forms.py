@@ -10,7 +10,6 @@ from django.urls import reverse
 from http import HTTPStatus
 from posts.forms import PostForm
 from posts.models import Comment
-from posts.models import Follow
 from posts.models import Group
 from posts.models import Post
 
@@ -53,6 +52,7 @@ class PostFormTest(TestCase):
         shutil.rmtree(TEMP_MEDIA_ROOT, ignore_errors=True)
 
     def test_create_post(self) -> None:
+        """Тест создания поста с картинкой"""
         small_gif = (
             b'\x47\x49\x46\x38\x39\x61\x02\x00'
             b'\x01\x00\x80\x00\x00\x00\x00\x00'
@@ -115,6 +115,7 @@ class PostFormTest(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_edit_post(self) -> None:
+        """Тест редактирования поста"""
         old_post = Post.objects.get(id=PostFormTest.posts_last_id)
         edit_post_data = {
             'text': 'Какой-то НОВЫЙ текст, да'
@@ -146,10 +147,11 @@ class PostFormTest(TestCase):
         self.assertEqual(PostFormTest.post_first_count, Post.objects.count())
 
     def test_delete_post(self):
+        """Тест удаления поста"""
         new_post_data = {'text': 'Пост для тестирования удаления'}
         PostFormTest.AUTHORIZED_CLIENT_1.post(
             reverse('posts:post_create'),
-            data = new_post_data,
+            data=new_post_data,
         )
         post_new_count = Post.objects.count()
         post_new_id = Post.objects.last().id
@@ -170,6 +172,7 @@ class PostFormTest(TestCase):
                 self.assertEqual(Post.objects.count(), posts_count)
 
     def test_create_comment(self):
+        """Тест создания комментария к посту"""
         comments_init_count = Comment.objects.count()
         new_comment_data = {'text': 'Какой классный пост! И комментарий!'}
         response = PostFormTest.GUEST_CLIENT.post(
@@ -211,6 +214,7 @@ class PostFormTest(TestCase):
                 )
 
     def test_delete_comment(self):
+        """Тест удаления комментария к посту"""
         comments_init_count = Comment.objects.count()
         new_comment_data = {'text': 'Комментарий для тестирования удаления'}
         PostFormTest.AUTHORIZED_CLIENT_1.post(

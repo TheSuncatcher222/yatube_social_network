@@ -42,7 +42,7 @@ class PostModelTest(TestCase):
         )
 
     def test_models_have_correct_object_names(self) -> None:
-        """Проверка, что моделей корректно работает __str__"""
+        """Проверка, что у моделей корректно работает __str__"""
         STR_COMMENT = (
             f'Автор: Тестовый автор{PostModelTest.NEW_LINE}'
             + 'Текст: Классный тестовый текст! И комментарий!!'
@@ -59,7 +59,7 @@ class PostModelTest(TestCase):
 
     @skip('Already tested in test_models_have_correct_object_names for Post ')
     def test_str_output_cut(self) -> None:
-        """Проверка усечения выходного текста у моделей"""
+        """Проверка усечения выходного текста моделей"""
         pass
 
     def test_models_fields(self) -> None:
