@@ -187,15 +187,10 @@ class PostsViewsTests(TestCase):
                 kwargs={'post_id': PostsViewsTests.POST_ID}
             )
         )
-        count = Post.objects.filter(author=PostsViewsTests.USER_1).count()
-        text = Post.objects.get(id=PostsViewsTests.POST_ID).text
-        test_dict = {
-            count: response.context['posts_count'],
-            text: response.context['post'].text,
-        }
-        for value, expected in test_dict.items():
-            with self.subTest(value=value):
-                self.assertEqual(value, expected)
+        self.assertEqual(
+            Post.objects.get(id=PostsViewsTests.POST_ID).text,
+            response.context['post'].text
+        )
         self.assertIsInstance(
             response.context['comments_form'].fields['text'],
             fields.CharField)
