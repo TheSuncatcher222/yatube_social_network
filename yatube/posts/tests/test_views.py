@@ -5,9 +5,11 @@ from django.forms import fields
 from django.test import Client
 from django.test import TestCase
 from django.urls import reverse
+from http import HTTPStatus
 from unittest import skip
-from ..models import Group
-from ..models import Post
+from posts.models import Follow
+from posts.models import Group
+from posts.models import Post
 
 
 class PostsViewsTests(TestCase):
@@ -15,7 +17,8 @@ class PostsViewsTests(TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
-        cls.USER = User.objects.create(username='Author')
+        cls.USER = User.objects.create(username='Author_1')
+        cls.USER_2 = User.objects.create(username='Author_2')
         cls.group = Group.objects.create(
             description='Тестовое описание группы',
             slug='test_slug',
@@ -42,6 +45,9 @@ class PostsViewsTests(TestCase):
         ])
         cls.AUTHORIZED_CLIENT = Client()
         cls.AUTHORIZED_CLIENT.force_login(cls.USER)
+        cls.AUTHORIZED_CLIENT_2 = Client()
+        cls.AUTHORIZED_CLIENT_2.force_login(cls.USER_2)
+        cls.GUEST_CLIENT = Client()
         cls.SLUG = cls.group.slug
         cls.ID = Post.objects.latest('id').id
 
@@ -172,6 +178,51 @@ class PostsViewsTests(TestCase):
             with self.subTest(field=field):
                 response_value = str(response.context[field])
                 self.assertEqual(response_value, expected)
+
+    def test_subscriptions(self):
+        Post.objects.create(
+            author=PostsViewsTests.USER_2,
+            text='Пост для теста подписки',
+        )
+        follow_post = Post.objects.get(id=PostsViewsTests.ID + 1)
+        response = PostsViewsTests.GUEST_CLIENT.get(
+            reverse('posts:follow_index')
+        )
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
+        response = PostsViewsTests.AUTHORIZED_CLIENT.get(
+            reverse('posts:follow_index')
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        
+        subscriptions = {
+            PostsViewsTests.GUEST_CLIENT: [PostsViewsTests.USER, 0],
+            PostsViewsTests.AUTHORIZED_CLIENT: [PostsViewsTests.USER, 0],
+            PostsViewsTests.AUTHORIZED_CLIENT: [PostsViewsTests.USER_2, 1],
+        }
+        for user, result in subscriptions.items():
+            with self.subTest(field=user):
+                user.get(
+                    f'/profile/{result[0]}/follow/'
+                )
+                self.assertEqual(Follow.objects.count(), result[1])
+        response = PostsViewsTests.AUTHORIZED_CLIENT.get(
+            reverse('posts:follow_index')
+        )
+        len_context = len(response.context['page_obj'])
+        self.assertEqual(len_context, 1)
+        self.assertEqual(
+            str(response.context['page_obj'][:len_context][0]),
+            str(follow_post)
+        )
+        PostsViewsTests.AUTHORIZED_CLIENT.get(
+            f'/profile/{PostsViewsTests.USER_2}/unfollow/'
+        )
+        self.assertEqual(Follow.objects.count(), 0)
+        response = PostsViewsTests.AUTHORIZED_CLIENT.get(
+            reverse('posts:follow_index')
+        )
+        self.assertEqual(response.status_code, HTTPStatus.OK)
+        follow_post.delete()
 
     def test_paginator_for_index(self) -> None:
         """Тест paginator для 'posts:index'"""

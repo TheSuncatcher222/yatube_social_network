@@ -192,16 +192,23 @@ class PostFormTest(TestCase):
         new_comment_id = Comment.objects.last().id
         self.assertEqual(response.status_code, HTTPStatus.OK)
         self.assertEqual(Comment.objects.count(), comments_init_count + 1)
-        response = PostFormTest.AUTHORIZED_CLIENT_1.get(
-            reverse(
-                'posts:post_detail',
-                kwargs={'post_id': PostFormTest.posts_last_id},
+        users_list: list[Client] = [
+            PostFormTest.GUEST_CLIENT,
+            PostFormTest.AUTHORIZED_CLIENT_1,
+            PostFormTest.AUTHORIZED_CLIENT_2,
+        ]
+        for user in users_list:
+            response = user.get(
+                reverse(
+                    'posts:post_detail',
+                    kwargs={'post_id': PostFormTest.posts_last_id},
+                )
             )
-        )
-        self.assertEqual(
-            response.context['post'].comments.get(id=new_comment_id),
-            Comment.objects.get(id=new_comment_id)
-        )
+            with self.subTest(field=user):
+                self.assertEqual(
+                    response.context['post'].comments.get(id=new_comment_id),
+                    Comment.objects.get(id=new_comment_id)
+                )
 
     def test_delete_comment(self):
         comments_init_count = Comment.objects.count()
@@ -230,38 +237,3 @@ class PostFormTest(TestCase):
                     ),
                 )
                 self.assertEqual(Comment.objects.count(), comments_count)
-
-    def test_subscriptions(self):
-        response = PostFormTest.GUEST_CLIENT.get(
-            reverse('posts:follow_index')
-        )
-        self.assertEqual(response.status_code, HTTPStatus.FOUND)
-        response = PostFormTest.AUTHORIZED_CLIENT_1.get(
-            reverse('posts:follow_index')
-        )
-        self.assertEqual(response.status_code, HTTPStatus.OK)
-        PostFormTest.AUTHORIZED_CLIENT_1.get(
-            f'/profile/{PostFormTest.USER_1}/follow/'
-        )
-        self.assertEqual(Follow.objects.count(), 0)
-        PostFormTest.AUTHORIZED_CLIENT_1.get(
-            f'/profile/{PostFormTest.USER_2}/follow/'
-        )
-        self.assertEqual(Follow.objects.count(), 1)
-        response = PostFormTest.AUTHORIZED_CLIENT_1.get(
-            reverse('posts:follow_index')
-        )
-        len_context = len(response.context['page_obj'])
-        self.assertEqual(len_context, 1)
-        self.assertEqual(
-            str(response.context['page_obj'][:len_context][0]),
-            str(PostFormTest.POST_2)
-        )
-        PostFormTest.AUTHORIZED_CLIENT_1.get(
-            f'/profile/{PostFormTest.USER_2}/unfollow/'
-        )
-        self.assertEqual(Follow.objects.count(), 0)
-        response = PostFormTest.AUTHORIZED_CLIENT_1.get(
-            reverse('posts:follow_index')
-        )
-        self.assertEqual(response.status_code, HTTPStatus.OK)
