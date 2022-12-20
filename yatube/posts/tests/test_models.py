@@ -123,6 +123,9 @@ class PostModelTest(TestCase):
             PostModelTest.post._meta.get_field('group').verbose_name: (
                 'Группа (не обязательно)'
             ),
+            PostModelTest.post._meta.get_field('image').help_text: (
+                'Прикрепите картинку (не обязательно)'
+            ),
             PostModelTest.post._meta.get_field('pub_date').verbose_name: (
                 'Дата публикации'
             ),
