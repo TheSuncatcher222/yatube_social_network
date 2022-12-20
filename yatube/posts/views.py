@@ -113,15 +113,13 @@ def profile_unfollow(request, username):
 
 def post_detail(request, post_id):
     """Отображает страницу c запрошенным (post_id) постом"""
-    post = get_object_or_404(Post.objects, id=post_id)
+    post = get_object_or_404(Post, id=post_id)
     page_obj = Post.objects.filter(id=post_id)
-    posts_count = Post.objects.filter(author=post.author).count()
     template = 'includes/posts/post_detail.html'
     context = {
         'comments_form': CommentForm(),
         'page_obj': page_obj,
         'post': post,
-        'posts_count': posts_count,
     }
     return render(request, template, context)
 
