@@ -3,19 +3,14 @@ from django.db import models
 from core.models import BaseModel
 
 
-def str_output_cut(text, author):
+def str_output_cut(text):
     """Сокращает выводимый текст в __str__ до N слов"""
     slit_text: list = text.split(' ')
-    words_to_preview: int = 5
+    words_to_preview: int = 30
     if len(slit_text) > words_to_preview:
         slit_text = slit_text[:words_to_preview]
         text = ' '.join(slit_text) + ' ...'
-    new_line: str = '\n'
-    return_string: str = (
-        f'Автор: {author}{new_line}'
-        + f'Текст: {text}'
-    )
-    return return_string
+    return text
 
 
 class Follow(models.Model):
@@ -101,7 +96,7 @@ class Post(BaseModel):
 
     def __str__(self):
         """Отображает информацию об объекте (классе)"""
-        return str_output_cut(self.text, self.author)
+        return str_output_cut(self.text)
 
 
 class Comment(BaseModel):
@@ -130,4 +125,4 @@ class Comment(BaseModel):
 
     def __str__(self):
         """Отображает информацию об объекте (классе)"""
-        return str_output_cut(self.text, self.author)
+        return str_output_cut(self.text)
