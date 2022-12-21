@@ -6,6 +6,16 @@ from posts.models import Comment
 from posts.models import Group
 from posts.models import Post
 
+POST_TEXT = ('Тестовый текст тестового поста, в котором более 30 (33) '
+              + 'допустимых слов, и при этом абсолютно не несет в себе '
+              + 'никакого смысла, кроме того, чтобы проверить, работает ли '
+              + 'функция для обрезки текста в __str__'
+              )
+POST_STR = ('Тестовый текст тестового поста, в котором более 30 (33) '
+                  + 'допустимых слов, и при этом абсолютно не несет в себе '
+                  + 'никакого смысла, кроме того, чтобы проверить, работает ли '
+                  + 'функция для обрезки ...')
+
 
 class PostModelTest(TestCase):
     """Тест моделей Group и Post приложения 'posts'"""
@@ -24,7 +34,7 @@ class PostModelTest(TestCase):
         cls.post = Post.objects.create(
             author=cls.USER,
             group=cls.group,
-            text='Тестовый текст тестового поста, который более 5 слов',
+            text=POST_TEXT,
         )
         cls.comment = Comment.objects.create(
             author=cls.USER,
@@ -35,23 +45,14 @@ class PostModelTest(TestCase):
             author=cls.USER,
             user=cls.FOLLOWER,
         )
-        cls.NEW_LINE: str = '\n'
-        cls.STR_POST = (
-            f'Автор: Тестовый автор{cls.NEW_LINE}'
-            + 'Текст: Тестовый текст тестового поста, который ...'
-        )
 
     def test_models_have_correct_object_names(self) -> None:
         """Проверка, что у моделей корректно работает __str__"""
-        STR_COMMENT = (
-            f'Автор: Тестовый автор{PostModelTest.NEW_LINE}'
-            + 'Текст: Классный тестовый текст! И комментарий!!'
-        )
         test_dict = {
-            str(PostModelTest.comment): STR_COMMENT,
+            str(PostModelTest.comment): 'Классный тестовый текст! И комментарий!!',
             str(PostModelTest.follow): 'Тестовый автор',
             str(PostModelTest.group): 'Тестовое наименование группы',
-            str(PostModelTest.post): PostModelTest.STR_POST,
+            str(PostModelTest.post): POST_STR,
         }
         for task, expected_value in test_dict.items():
             with self.subTest(field=task):
@@ -66,7 +67,7 @@ class PostModelTest(TestCase):
         """Проверка полей моделей"""
         test_dict = {
             str(PostModelTest.comment.author): 'Тестовый автор',
-            str(PostModelTest.comment.post): PostModelTest.STR_POST,
+            str(PostModelTest.comment.post): POST_STR,
             PostModelTest.comment.text: (
                 'Классный тестовый текст! И комментарий!!'
             ),
@@ -111,9 +112,7 @@ class PostModelTest(TestCase):
             PostModelTest.group._meta.verbose_name_plural: 'группы',
             str(PostModelTest.post.author): 'Тестовый автор',
             str(PostModelTest.post.group): 'Тестовое наименование группы',
-            PostModelTest.post.text: (
-                'Тестовый текст тестового поста, который более 5 слов'
-            ),
+            PostModelTest.post.text: POST_TEXT,
             PostModelTest.post._meta.get_field('author').verbose_name: (
                 'Автор поста'
             ),
