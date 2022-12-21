@@ -1,7 +1,7 @@
 <div class="container">
   {% with request.resolver_match.view_name as view_name %}
     <div class="row">
-      <div class="d-flex justify-content-between bd-highlight mb-5">
+      <div class="d-flex justify-content-center bd-highlight mb-5">
         <div class="p-2 bd-highlight">
           {% if view_name != 'posts:post_detail' %}
             <a class="btn btn-primary btn-sm" 
@@ -27,16 +27,18 @@
           {% endif %}
         </div>
         <div class="p-2 bd-highlight">
-          {% if post.author.username == user.username %}
-            <a class="btn btn-warning btn-sm"
-              href="{% url 'posts:post_edit' post.id %}">
-              редактировать
-            </a>
-            &nbsp
-            <button class="btn btn-danger btn-sm" data-toggle="modal"
-              data-target="#postdeleteconfirm">
-              удалить
-            </button>
+          {% if view_name == 'posts:post_detail' %}
+            {% if post.author.username == user.username %}
+              <a class="btn btn-warning btn-sm"
+                href="{% url 'posts:post_edit' post.id %}">
+                редактировать
+              </a>
+              &nbsp
+              <button class="btn btn-danger btn-sm" data-toggle="modal"
+                data-target="#postdeleteconfirm">
+                удалить
+              </button>
+            {% endif %}
           {% endif %}
         </div>
       </div>
