@@ -177,7 +177,7 @@ def post_edit(request, post_id):
 
 @login_required
 def post_delete(request, post_id):
-    """Тест удаления поста"""
+    """Удаление поста"""
     delete_post = Post.objects.get(id=post_id)
     if request.user == delete_post.author:
         delete_post.delete()
@@ -186,7 +186,7 @@ def post_delete(request, post_id):
 
 @login_required
 def add_comment(request, post_id):
-    """Тест добавления комментария"""
+    """Добавление комментария"""
     form = CommentForm(request.POST or None)
     if form.is_valid():
         comment = form.save(commit=False)
@@ -198,7 +198,7 @@ def add_comment(request, post_id):
 
 @login_required
 def comment_delete(request, comment_id):
-    """Тест удаления комментария"""
+    """Удаление комментария"""
     delete_comment = Comment.objects.get(id=comment_id)
     post_id = Post.objects.get(comments=delete_comment).id
     if request.user == delete_comment.author:
