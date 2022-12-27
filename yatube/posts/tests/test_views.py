@@ -326,12 +326,10 @@ class PostsViewsTests(TestCase):
                                 group=PostsViewsTests.GROUP
                             )[start_index:end_index]
                         )
-                        print(3)
                     else:
                         expected = list(
                             Post.objects.all()[start_index:end_index]
                         )
-                        print(1)
                     self.assertEqual(response_value, expected)
 
     def test_cache_for_index(self) -> None:
