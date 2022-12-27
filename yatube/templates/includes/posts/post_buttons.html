@@ -10,20 +10,20 @@
             </a>
           {% endif %}
           &nbsp
+          {% if view_name != 'posts:profile' %}
+            <a class="btn btn-primary btn-sm"
+              href="{% url 'posts:profile' post.author %}">
+              записи автора
+            </a>
+            &nbsp
+          {% endif %}
           {% if view_name != 'posts:group_list' %}
            {% if post.group %}
              <a class="btn btn-primary btn-sm"
                href="{% url 'posts:group_list' post.group.slug %}">
                записи группы
              </a>
-             &nbsp
            {% endif %}
-          {% endif %}
-          {% if view_name != 'posts:profile' %}
-            <a class="btn btn-primary btn-sm"
-              href="{% url 'posts:profile' post.author %}">
-              записи автора
-            </a>
           {% endif %}
         </div>
         <div class="p-2 bd-highlight">
