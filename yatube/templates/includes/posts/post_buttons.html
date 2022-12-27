@@ -1,7 +1,7 @@
 <div class="container">
   {% with request.resolver_match.view_name as view_name %}
     <div class="row">
-      <div class="d-flex justify-content-center bd-highlight mb-5">
+      <div class="d-flex justify-content-center bd-highlight mb-20">
         <div class="p-2 bd-highlight">
           {% if view_name != 'posts:post_detail' %}
             <a class="btn btn-primary btn-sm" 
