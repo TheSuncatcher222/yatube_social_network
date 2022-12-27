@@ -38,6 +38,7 @@ class PostsViewsTests(TestCase):
             Post(
                 author=cls.USER_1,
                 text=f'Тестовый пост без группы №{i}',
+                group=cls.GROUP
             )
             for i in range(1, cls.end_rage_bulk_create)
         )
@@ -45,7 +46,6 @@ class PostsViewsTests(TestCase):
             Post(
                 author=cls.USER_1,
                 text=f'Тестовый пост с группой №{i}',
-                group=cls.GROUP
             )
             for i in range(1, cls.end_rage_bulk_create)
         )
@@ -229,14 +229,8 @@ class PostsViewsTests(TestCase):
                 kwargs={'username': PostsViewsTests.USER_1}
             )
         )
-        test_dict = {
-            'author': str(PostsViewsTests.USER_1),
-            # 'page_obj': Проверка производится в тесте paginator_for_profile
-        }
-        for field, expected in test_dict.items():
-            with self.subTest(field=field):
-                response_value = str(response.context[field])
-                self.assertEqual(response_value, expected)
+        response_value = str(response.context['author'])
+        self.assertEqual(response_value, str(PostsViewsTests.USER_1))
 
     def test_subscriptions(self):
         """Тест подписок на авторов"""
@@ -283,118 +277,62 @@ class PostsViewsTests(TestCase):
         self.assertEqual(response.status_code, HTTPStatus.OK)
         follow_post.delete()
 
-    def test_paginator_for_index(self) -> None:
-        """Тест paginator для 'posts:index'"""
-        test_dict = {
-            1: PAGE_POST_COUNT,
-            2: PAGE_POST_COUNT,
-            3: (ONE_MORE_PAGE_POST_COUNT * DIFFERENT_GROUPS_COUNT),
-        }
-        for field, expected in test_dict.items():
-            with self.subTest(field=field):
-                start_index: int = 0
-                end_index: int = 0
-                if field == 1:
-                    response = PostsViewsTests.AUTHORIZED_CLIENT_1.get(
-                        reverse('posts:index')
-                    )
-                    end_index = 10
-                if field == 2:
-                    response = PostsViewsTests.AUTHORIZED_CLIENT_1.get(
-                        reverse('posts:index') + f'?page={field}'
-                    )
-                    start_index = 10
-                    end_index = 20
-                if field == 3:
-                    response = PostsViewsTests.AUTHORIZED_CLIENT_1.get(
-                        reverse('posts:index') + f'?page={field}'
-                    )
-                    start_index = 20
-                    end_index = 22
-                response_value = len(response.context['page_obj'])
-                self.assertEqual(response_value, expected)
-                response_value = list(response.context['page_obj'])
-                expected = list(Post.objects.all()[start_index:end_index])
-                self.assertEqual(response_value, expected)
-
-    def test_paginator_for_group_list(self) -> None:
-        """Тест paginator для 'posts:group_list'"""
-        test_dict = {
+    def test_paginator(self) -> None:
+        """Тест paginator для 'posts:index/profile/group_list'"""
+        test_dict_count_2 = {
             1: PAGE_POST_COUNT,
             2: ONE_MORE_PAGE_POST_COUNT,
         }
-        for field, expected in test_dict.items():
-            with self.subTest(field=field):
-                start_index: int = 0
-                end_index: int = 0
-                if field == 1:
-                    response = PostsViewsTests.AUTHORIZED_CLIENT_1.get(
-                        reverse(
-                            'posts:group_list',
-                            kwargs={'group': PostsViewsTests.SLUG}
-                        )
-                    )
-                    end_index = 10
-                if field == 2:
-                    response = PostsViewsTests.AUTHORIZED_CLIENT_1.get(
-                        reverse(
-                            'posts:group_list',
-                            kwargs={'group': PostsViewsTests.SLUG}
-                        ) + f'?page={field}'
-                    )
-                    start_index = 10
-                    end_index = 20
-                response_value = len(response.context['page_obj'])
-                self.assertEqual(response_value, expected)
-                response_value = list(response.context['page_obj'])
-                expected = list(Post.objects.filter(
-                    group=PostsViewsTests.GROUP
-                )[start_index:end_index]
-                )
-                self.assertEqual(response_value, expected)
-
-    def test_paginator_for_profile(self) -> None:
-        """Тест paginator для 'posts:profile'"""
-        test_dict = {
+        test_dict_count_3 = {
             1: PAGE_POST_COUNT,
             2: PAGE_POST_COUNT,
             3: (ONE_MORE_PAGE_POST_COUNT * DIFFERENT_GROUPS_COUNT),
         }
-        for field, expected in test_dict.items():
-            with self.subTest(field=field):
-                start_index: int = 0
-                end_index: int = 0
-                if field == 1:
-                    response = PostsViewsTests.AUTHORIZED_CLIENT_1.get(
-                        reverse(
-                            'posts:profile',
-                            kwargs={'username': str(PostsViewsTests.USER_1)}
+        group_list_reverse = reverse(
+            'posts:group_list',
+            kwargs={'group': PostsViewsTests.SLUG}
+        )
+        test_dict_reverse = {
+            reverse('posts:index'): test_dict_count_3,
+            reverse(
+                'posts:profile',
+                kwargs={'username': str(PostsViewsTests.USER_1)}
+            ): test_dict_count_3,
+            group_list_reverse: test_dict_count_2,
+        }
+        for path, count in test_dict_reverse.items():
+            for field, expected in count.items():
+                with self.subTest(field=field):
+                    start_index: int = 0
+                    end_index: int = 0
+                    if field == 1:
+                        response = PostsViewsTests.AUTHORIZED_CLIENT_1.get(
+                            path
                         )
-                    )
-                    end_index = 10
-                if field == 2:
-                    response = PostsViewsTests.AUTHORIZED_CLIENT_1.get(
-                        reverse(
-                            'posts:profile',
-                            kwargs={'username': str(PostsViewsTests.USER_1)}
-                        ) + f'?page={field}'
-                    )
-                    start_index = 10
-                    end_index = 20
-                if field == 3:
-                    response = PostsViewsTests.AUTHORIZED_CLIENT_1.get(
-                        reverse(
-                            'posts:profile',
-                            kwargs={'username': str(PostsViewsTests.USER_1)}
-                        ) + f'?page={field}'
-                    )
-                    start_index = 20
-                    end_index = 22
-                response_value = len(response.context['page_obj'])
-                self.assertEqual(response_value, expected)
-                response_value = list(response.context['page_obj'])
-                expected = list(Post.objects.all()[start_index:end_index])
-                self.assertEqual(response_value, expected)
+                        end_index = expected
+                    if field > 1:
+                        response = PostsViewsTests.AUTHORIZED_CLIENT_1.get(
+                            path + f'?page={field}'
+                        )
+                        start_index = (field - 1) * PAGE_POST_COUNT
+                        end_index = start_index + expected
+                    response_value = len(response.context['page_obj'])
+                    self.assertEqual(response_value, expected)
+                    response_value = list(response.context['page_obj'])
+                    cache.clear()
+                    if group_list_reverse == path:
+                        expected = list(
+                            Post.objects.filter(
+                                group=PostsViewsTests.GROUP
+                            )[start_index:end_index]
+                        )
+                        print(3)
+                    else:
+                        expected = list(
+                            Post.objects.all()[start_index:end_index]
+                        )
+                        print(1)
+                    self.assertEqual(response_value, expected)
 
     def test_cache_for_index(self) -> None:
         """Тест cache для страницы 'posts:index'"""
