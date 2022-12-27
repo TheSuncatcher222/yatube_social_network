@@ -18,32 +18,43 @@
   {% block post_action %}
   {% endblock %}
     {% csrf_token %}
-    {% for field in form %}
-      <div class="form-group row my-3"
-        {% if field.field.required %}
-          aria-required="true"
-        {% else %}
-          aria-required="false"
-        {% endif %}>
-        <label for="{{ field.id_for_label }}">
-          {{ field.label }}
-            {% if field.field.required %}
-              <span class="required text-danger">*</span>
+    {% if form %}
+      {% for field in form %}
+        <div class="form-group row my-3"
+          {% if field.field.required %}
+            aria-required="true"
+          {% else %}
+            aria-required="false"
+          {% endif %}>
+          <label for="{{ field.id_for_label }}">
+            {{ field.label }}
+              {% if field.field.required %}
+                <span class="required text-danger">*</span>
+              {% endif %}
+          </label>
+          <div>
+            {{ field|addclass:'form-control' }}
+            {% if field.help_text %}
+              <small id="{{ field.id_for_label }}-help"
+                class="form-text text-muted"> {{ field.help_text|safe }}
+              </small>
             {% endif %}
-        </label>
-        <div>
-          {{ field|addclass:'form-control' }}
-          {% if field.help_text %}
-            <small id="{{ field.id_for_label }}-help"
-              class="form-text text-muted"> {{ field.help_text|safe }}
-            </small>
-          {% endif %}
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="form-group row my-3 p-3">
+        {% block div_change_password %}
+        {% endblock %}
+      </div>
+    {% endif %}
+    <div class="row">
+      <div class="d-flex justify-content-center bd-highlight mb-20">
+        <div class="p-2 bd-highlight">
+          {% block bottom_buttons %}
+          {% endblock %}
         </div>
       </div>
-    {% endfor %}
-    <div class="col-md-6 offset-md-4">
-      {% block bottom_buttons %}
-      {% endblock %}
     </div>
   </form>
 {% endblock %}
