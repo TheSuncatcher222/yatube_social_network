@@ -46,32 +46,32 @@
   {% endwith %}
 </div>
 <!--Modal-->
-<div class="modal fade" id="postdeleteconfirm" tabindex="-1"
-  aria-labelledby="postdeleteconfirm" aria-hidden="True">
-  <div class="modal-dialog-centered">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="postdeleteconfirm">
-            Подтверждение удаления
-          </h5>
-          <button class="btn-close" data-dismiss="modal" aria-lable="close">
-          </button>
-        </div>
-        <div class="modal-body">
-          Вы действительно хотите удалить запись?
-          Данное действие не может быть отменено!
-          <br>
-          <br>
-          <div class="d-flex justify-content-center">
-            <a class="btn btn-danger btn-sm" 
-              href="{% url 'posts:post_delete' post.id %}">
-              Да, удалить
-            </a>
+  <div class="modal fade" id="postdeleteconfirm" tabindex="-1"
+    aria-labelledby="postdeleteconfirm" aria-hidden="True">
+    <div class="modal-dialog-centered">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="postdeleteconfirm">
+              Подтверждение удаления
+            </h5>
+            <button class="btn-close" data-dismiss="modal" aria-lable="close">
+            </button>
+          </div>
+          <div class="modal-body">
+            Вы действительно хотите удалить запись?
+            Данное действие не может быть отменено!
+            <br>
+            <br>
+            <div class="d-flex justify-content-center">
+              <a class="btn btn-danger btn-sm" 
+                href="{% url 'posts:post_delete' post.id %}">
+                Да, удалить
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 <!--Modal-->
