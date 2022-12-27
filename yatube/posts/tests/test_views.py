@@ -75,7 +75,7 @@ class PostsViewsTests(TestCase):
             reverse(
                 'posts:group_list',
                 kwargs={'group': PostsViewsTests.SLUG}
-            ): 'posts/group_list.html',
+            ): 'includes/posts/group_list.html',
             reverse(
                 'posts:post_detail',
                 kwargs={'post_id': PostsViewsTests.POST_ID}

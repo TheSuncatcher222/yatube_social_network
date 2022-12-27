@@ -60,7 +60,7 @@ class PostsURLTests(TestCase):
             '/': 'includes/posts/index.html',
             '/create/': 'includes/posts/create_post.html',
             '/follow/': 'includes/posts/follow.html',
-            f'/group/{cls.SLUG}/': 'posts/group_list.html',
+            f'/group/{cls.SLUG}/': 'includes/posts/group_list.html',
             f'/posts/{cls.ID}/': 'includes/posts/post_detail.html',
             f'/posts/{cls.ID}/edit/': 'includes/posts/create_post.html',
             f'/profile/{cls.USER}/': 'includes/posts/profile.html',
