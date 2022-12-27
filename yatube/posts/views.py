@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
+from django.shortcuts import get_list_or_404
 from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -53,7 +54,7 @@ def follow_index(request):
 def groups(request, group):
     """Отображает страницу c постами запрошенной (group) группы"""
     group = get_object_or_404(Group, slug=str(group).lower())
-    template = 'posts/group_list.html'
+    template = 'includes/posts/group_list.html'
     context = {
         'group': group,
         'page_obj': paginator_for_pages(
@@ -70,14 +71,12 @@ def profile(request, username):
     template = 'includes/posts/profile.html'
     following = False
     following_allow = False
-    if request.user.is_authenticated:
-        user = request.user
-        if user != author:
-            following_allow = True
-            following = Follow.objects.filter(
-                user=user,
-                author=author
-            ).exists()
+    if request.user.is_authenticated and request.user != author:
+        following_allow = True
+        following = Follow.objects.filter(
+            user=request.user,
+            author=author
+        ).exists()
     context = {
         'author': author,
         'page_obj': paginator_for_pages(
@@ -93,12 +92,14 @@ def profile(request, username):
 @login_required
 def profile_follow(request, username):
     """Создает подписку на автора"""
-    author = User.objects.get(username=username)
-    if not Follow.objects.filter(user=request.user, author=author).exists():
-        if request.user != author:
+    if request.user.username != username:
+        if not Follow.objects.filter(
+            user=request.user,
+            author__username=username
+        ).exists():
             Follow.objects.create(
                 user=request.user,
-                author=author
+                author=User.objects.get(username=username)
             )
     return profile(request, username)
 
@@ -115,13 +116,12 @@ def profile_unfollow(request, username):
 
 def post_detail(request, post_id):
     """Отображает страницу c запрошенным (post_id) постом"""
-    post = get_object_or_404(Post, id=post_id)
-    page_obj = Post.objects.filter(id=post_id)
+    page_obj = get_list_or_404(Post.objects, id=post_id)
     template = 'includes/posts/post_detail.html'
     context = {
         'comments_form': CommentForm(),
         'page_obj': page_obj,
-        'post': post,
+        'post': page_obj[0],
         'page_obj_comments': paginator_for_pages(
             Comment.objects.select_related('author', 'post').filter(post=post_id),
             request.GET.get('page'),

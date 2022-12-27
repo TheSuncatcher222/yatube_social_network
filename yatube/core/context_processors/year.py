@@ -1,10 +1,9 @@
 import datetime
+from time import sleep
 
 
 def year(request):
     """Добавляет переменную с текущим годом."""
-    today = datetime.date.today()
-    year = today.year
     return {
-        'year': year
+        'year': datetime.datetime.now().year
     }
