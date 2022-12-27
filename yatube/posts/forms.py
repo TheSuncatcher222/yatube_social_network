@@ -1,9 +1,9 @@
-from django import forms
+from django.forms import ModelForm
 from .models import Post
 from .models import Comment
 
 
-class PostForm(forms.ModelForm):
+class PostForm(ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['group'].empty_label = 'Группа не выбрана'
@@ -13,7 +13,7 @@ class PostForm(forms.ModelForm):
         fields = ('group', 'image', 'text',)
 
 
-class CommentForm(forms.ModelForm):
+class CommentForm(ModelForm):
     class Meta:
         model = Comment
         fields = ('text',)
