@@ -24,47 +24,52 @@
           {% block swithcer %}
           {% endblock %}
           <div class="card-body">
-            {% for post in page_obj %}
-              <ul class="list-unstyled">
-                <li>
-                  Автор: @{{ post.author }}
-                  {% if post.author.get_full_name %}
-                    ({{ post.author.get_full_name }})
-                  {% endif %}
-                </li>
-                <li>
-                  Дата публикации: {{ post.pub_date }}
-                </li>
-                {% if post.group %}
+            {% if view_name == 'posts:post_create' or view_name == 'posts:post_edit'%}
+              {% block post_create_edit %}
+              {% endblock %}
+            {% else %}
+              {% for post in page_obj %}
+                <ul class="list-unstyled">
                   <li>
-                    Группа: {{ post.group }}
+                    Автор: @{{ post.author }}
+                    {% if post.author.get_full_name %}
+                      ({{ post.author.get_full_name }})
+                    {% endif %}
                   </li>
-                {% endif %}
-                {% if post.comments.count > 0 %}
                   <li>
-                    Комментариев: {{ post.comments.count }}
+                    Дата публикации: {{ post.pub_date }}
                   </li>
-                {% endif %}
-                <p>
-                </p>
-                  {% if view_name == 'posts:post_detail' %}
-                    {{ post.text|linebreaks }}
-                    {% thumbnail post.image "1000x550" crop="center" upscale=True as im %}
-                      <img class="card-img my-2" src="{{ im.url }}">
-                    {% endthumbnail %}
-                  {% else %}
-                    {{ post }}
-                    {% thumbnail post.image "1000x200" crop="center" upscale=True as im %}
-                      <img class="card-img my-2" src="{{ im.url }}">
-                    {% endthumbnail %}
+                  {% if post.group %}
+                    <li>
+                      Группа: {{ post.group }}
+                    </li>
                   {% endif %}
-              </ul>
-              {% include 'includes/posts/post_buttons.html' %}
-              {% if not forloop.last %}
-                <hr>
-              {% endif %} 
-            {% endfor %}
-            {% include 'includes/posts/paginator.html' %}
+                  {% if post.comments.count > 0 %}
+                    <li>
+                      Комментариев: {{ post.comments.count }}
+                    </li>
+                  {% endif %}
+                  <p>
+                  </p>
+                    {% if view_name == 'posts:post_detail' %}
+                      {{ post.text|linebreaks }}
+                      {% thumbnail post.image "1000x550" crop="center" upscale=True as im %}
+                        <img class="card-img my-2" src="{{ im.url }}">
+                      {% endthumbnail %}
+                    {% else %}
+                      {{ post }}
+                      {% thumbnail post.image "1000x200" crop="center" upscale=True as im %}
+                        <img class="card-img my-2" src="{{ im.url }}">
+                      {% endthumbnail %}
+                    {% endif %}
+                </ul>
+                {% include 'includes/posts/post_buttons.html' %}
+                {% if not forloop.last %}
+                  <hr>
+                {% endif %} 
+              {% endfor %}
+              {% include 'includes/posts/paginator.html' %}
+            {% endif %}
           </div>
         </div>
         <br>
