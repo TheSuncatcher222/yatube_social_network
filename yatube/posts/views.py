@@ -123,9 +123,11 @@ def post_detail(request, post_id):
         'page_obj': page_obj,
         'post': page_obj[0],
         'page_obj_comments': paginator_for_pages(
-            Comment.objects.select_related('author', 'post').filter(post=post_id),
+            Comment.objects.select_related(
+                'author', 'post'
+            ).filter(post=post_id),
             request.GET.get('page'),
-            ),
+        ),
     }
     return render(request, template, context)
 
