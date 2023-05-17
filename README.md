@@ -1,3 +1,3 @@
-# YAtube Social Network
+# Yatube Social Network
 
-To be discrybed..
+To be described..
