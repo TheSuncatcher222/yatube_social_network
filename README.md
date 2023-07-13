@@ -32,7 +32,7 @@ Yatube Social Network is a web-site to get access to the coolest posts from over
 
 Yatube API uses a number of open source projects to work properly:
 
-![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white) ![DjangoREST](https://img.shields.io/badge/DJANGO-REST-ff1709?style=for-the-badge&logo=django&logoColor=white&color=ff1709&labelColor=gray) ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54) ![Django](https://img.shields.io/badge/django-%23092E20.svg?style=for-the-badge&logo=django&logoColor=white) ![JWT](https://img.shields.io/badge/JWT-black?style=for-the-badge&logo=JSON%20web%20tokens)
 - [Python] (v.3.9) - a target programming language
 - [Django] (v.3.2.16) - a high-level Python web framework
 - [Simple JWT] (v.2.1.0) - a JSON Web Token authentication plugin for the Django REST Framework according to the industry standard RFC 7519
