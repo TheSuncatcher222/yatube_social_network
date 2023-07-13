@@ -99,7 +99,7 @@ python manage.py migrate
 And run server!
 
 ```sh
-python3 manage.py runserver
+python manage.py runserver
 ```
 
 Verify the deployment by navigating to your server address in
@@ -123,5 +123,4 @@ Created by [Altair21817]
 [Altair21817]: <https://github.com/Altair21817>
 [Python]: <https://www.python.org/>
 [Django]: <https://www.djangoproject.com/>
-[Django REST framework]: <https://https://www.django-rest-framework.org/>
 [Simple JWT]: <https://django-rest-framework-simplejwt.readthedocs.io/en/latest/>
