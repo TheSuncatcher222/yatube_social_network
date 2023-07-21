@@ -42,7 +42,7 @@ Yatube API uses a number of open source projects to work properly:
 From the local dev folder clone repository
 
 ```sh
-git clone https://github.com/Altair21817/yatube_social_network.git
+git clone https://github.com/TheSuncatcher222/yatube_social_network.git
 ```
 
 Go to the main folder
@@ -118,9 +118,9 @@ Want to contribute? Great! Touch me via GitHub!
 MIT
 
 **Free Software, Hell Yeah!**
-Created by [Altair21817]
+Created by [TheSuncatcher222]
 
-[Altair21817]: <https://github.com/Altair21817>
+[TheSuncatcher222]: <https://github.com/TheSuncatcher222>
 [Python]: <https://www.python.org/>
 [Django]: <https://www.djangoproject.com/>
 [Simple JWT]: <https://django-rest-framework-simplejwt.readthedocs.io/en/latest/>
