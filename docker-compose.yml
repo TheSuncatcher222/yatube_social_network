@@ -1,0 +1,26 @@
+version: '3.8'
+
+volumes:
+  yatube_database_volume:
+  yatube_static_volume:
+  yatube_media_volume:
+
+services:
+
+  yatube_backend:
+    image: thesuncatcher222/yatube_backend:latest
+    env_file: .env
+    volumes:
+      - yatube_database_volume:/app/database
+      - yatube_static_volume:/app/static_django
+      - yatube_media_volume:/app/media
+
+  yatube_gateway:
+    image: thesuncatcher222/yatube_gateway:latest
+    ports:
+      - "8003:8000"
+    volumes:
+      - yatube_static_volume:/var/html/static/
+      - yatube_media_volume:/var/html/media/
+    depends_on:
+      - yatube_backend
