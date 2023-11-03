@@ -12,26 +12,30 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+load_dotenv(os.path.join(BASE_DIR, '.env'), verbose=True)
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'bfo&75*67=_4coetm_79kxu4zk8z8-sktufl^#l9)auwor=4=y'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '[::1]',
-    'testserver',
+    os.getenv('HOST'),
 ]
-
+CSRF_TRUSTED_ORIGINS = (f"https://{os.getenv('HOST')}",)
 
 # Application definition
 
@@ -86,10 +90,15 @@ WSGI_APPLICATION = 'yatube.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
+NEW_DB_DIR = os.path.join(BASE_DIR, 'database')
+
+if not os.path.exists(NEW_DB_DIR):
+    os.makedirs(NEW_DB_DIR)
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'NAME': os.path.join(NEW_DB_DIR, 'db.sqlite3'),
     }
 }
 
@@ -131,6 +140,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_django')
 
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
